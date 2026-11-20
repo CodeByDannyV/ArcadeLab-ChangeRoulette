@@ -1,0 +1,203 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#001423">
+  <title>Network Change Roulette (CR)</title>
+  <link rel="stylesheet" href="./game/style.css">
+  <script type="module" src="./game/app.mjs"></script>
+</head>
+<body>
+  <header class="masthead">
+    <div class="wordmark"><span class="brand-wheel" aria-hidden="true"></span>Network Change Roulette (CR)</div>
+    <nav class="game-nav" aria-label="Game">
+      <button id="exit-side" class="outline" hidden>Leave practice round</button>
+      <button id="open-library" class="outline">Ticket library</button>
+      <button id="open-score" class="outline">Scorecard <b id="hud-points">0 pts</b></button>
+    </nav>
+  </header>
+  <main>
+    <noscript><p>Enable JavaScript to play Network Change Roulette (CR).</p></noscript>
+    <section id="unavailable" class="panel" hidden>
+      <h1>Challenge unavailable</h1>
+      <p id="load-error"></p>
+    </section>
+    <div id="challenge" hidden>
+      <div class="quiz-progress"><p id="case-id" class="case-meta"></p><span id="hud-progress"></span></div>
+      <progress id="case-progress" max="5" value="0" aria-label="Questions answered this round"></progress>
+      <section class="panel quiz-card" aria-labelledby="round-title">
+        <header class="quiz-heading">
+          <div><p class="question-type" id="question-type"></p><h1 id="round-title" tabindex="-1"></h1><p id="question-stem"></p><p id="bot-ready">Bot forecast locked until you spin</p></div>
+          <div class="wheel" id="wheel" aria-hidden="true"><div class="dial"><div class="sectors" id="sectors"></div></div><span class="pointer"></span></div>
+        </header>
+        <form id="prediction-form" class="quiz-form">
+          <fieldset id="choices">
+            <legend>Which branches lose access?</legend>
+            <div class="branch-choices" id="branch-choices"></div>
+            <label class="choice neither"><input type="checkbox" id="neither">Neither branch</label>
+          </fieldset>
+          <fieldset id="risk-choices">
+            <legend>How risky is the rollout?</legend>
+            <div class="risk-picks" id="risk-picks"></div><p class="risk-clue" id="risk-clue"></p>
+          </fieldset>
+          <fieldset id="board-field" class="full-width board-field" hidden>
+            <legend>Change board · Make the rollout call</legend>
+            <p id="board-context"></p>
+            <p class="field-note">Approve when both sites meet intent and recovery fits the deadline. Otherwise stage if an in-scope pilot site meets intent. Hold in all other cases.</p>
+            <div id="board-picks" class="risk-picks"></div>
+          </fieldset>
+          <details id="evidence-pick" class="full-width decision-pick"><summary>Cite the decisive evidence</summary>
+            <label for="citation" id="evidence-prompt"></label><select id="citation"></select>
+          </details>
+          <div class="quiz-submit"><button class="primary" id="commit" type="submit">Spin &amp; commit</button>
+            <button type="button" class="text-action" id="risk-guide">Inspect the evidence</button>
+            <label class="chip-bet" id="wager-label"><input type="checkbox" id="wager"> Call your shot <small>+25 arcade for exact impact · once per round</small></label></div>
+          <p class="input-error" id="input-error" role="alert"></p>
+        </form>
+        <div class="quiz-result" id="replay-body" hidden>
+          <p id="replay-status" tabindex="-1"></p><p id="award" class="award"></p>
+          <div class="bot-result" id="bot-result"></div>
+          <p class="field-note" id="arcade-feedback"></p>
+          <button type="button" class="text-action" id="ride-packet">Ride the packet</button>
+          <div id="next-deal" hidden><h3>Choose your next ticket</h3><div class="deal-cards" id="deal-cards"></div></div>
+          <button class="primary" id="advance" type="button">Next question</button>
+          <button class="outline" id="retry" type="button" hidden>Try again</button>
+        </div>
+      </section>
+      <div class="evidence">
+        <details id="replay-detail" class="panel drawer" hidden><summary>Answer explanation</summary>
+          <div class="drawer-body"><p class="intent-verdict" id="intent-verdict"></p><p id="risk-review"></p>
+            <ol class="replay-rows" id="replay-rows"></ol></div>
+        </details>
+        <details class="panel drawer" id="ticket-evidence"><summary id="policy-heading">Change &amp; rollout evidence</summary>
+          <div class="drawer-body"><h2 class="panel-heading" id="ticket-heading">Change ticket</h2>
+          <p id="ticket"></p><p id="intent-targets"></p>
+              <p class="model" id="firewall-model"></p><div class="source-chips" id="source-chips" aria-label="Branch endpoints"></div>
+              <div class="table-frame">
+                <table id="policy-table" aria-label="Policy evidence">
+                  <thead><tr id="policy-columns"><th scope="col">Source allowlist</th><th scope="col">Subnet (CIDR)</th><th scope="col">Action</th></tr></thead>
+                  <tbody id="rule-rows"></tbody>
+                </table>
+              </div>
+              <ul id="change-lines" hidden></ul>
+              <button type="button" class="text-action" id="compare-config">Compare Terraform configurations</button>
+              <section class="risk-evidence" aria-labelledby="risk-evidence-heading">
+                <h3 id="risk-evidence-heading">Rollout evidence</h3>
+                <p id="workflow"></p><p class="field-note" id="business-facts"></p>
+                <dl class="risk-facts" id="risk-facts"></dl>
+                <details class="rubric" id="rubric"><summary>How to rate this risk</summary>
+                  <p>Compare the recovery estimate with the service tolerance. Use the rehearsal row to read the risk of this rollout.</p>
+                  <table aria-label="Workshop risk matrix"><thead><tr><th scope="col">Rehearsal</th><th scope="col">Within tolerance</th><th scope="col">Over, up to 2×</th><th scope="col">Over 2×</th></tr></thead><tbody id="risk-matrix"></tbody></table><button type="button" class="text-action" id="back-to-risk">Return to forecast</button>
+                </details>
+              </section>
+          </div>
+        </details>
+        <details class="panel drawer" id="config-detail">
+          <summary>Terraform <span class="drawer-caption">Current vs. proposed</span></summary>
+          <div class="drawer-body"><p id="config-note"></p>
+            <label id="config-format-control" hidden>View file
+              <select id="config-format"><option value="terraform">main.tf</option><option value="pac">proxy.pac</option></select>
+            </label>
+            <div class="config-grid">
+              <section><h3>Current configuration</h3><pre tabindex="0" aria-label="Current configuration"><code id="config-before"></code></pre></section>
+              <section><h3>Proposed configuration</h3><pre tabindex="0" aria-label="Proposed configuration"><code id="config-after"></code></pre></section>
+            </div>
+          </div>
+        </details>
+        <details class="panel drawer atlas" id="atlas-detail">
+          <summary id="atlas-title">Network atlas <span class="atlas-phase" id="atlas-phase"></span></summary>
+            <div class="atlas-layout"><div class="planet-stage"><canvas tabindex="0" id="globe" aria-label="Rotatable globe showing network sites. Use the site selector for keyboard navigation."></canvas>
+              <div class="map-tools"><button id="recenter" class="map-control" type="button">Center ticket</button><button id="zoom" class="map-control" type="button">Zoom in</button></div></div>
+              <div class="atlas-inspector"><label for="site-select">Inspect a location</label><select id="site-select"></select>
+                <div class="inspector-switch" aria-label="Location view"><button type="button" id="view-network" aria-pressed="true">Network</button><button type="button" id="view-change" aria-pressed="false">Change desk</button></div>
+                <p id="site-coords"></p><h3 id="site-name"></h3><p id="site-detail"></p>
+                <button class="outline" id="site-tickets" type="button">Browse site tickets</button>
+                <p class="field-note">Drag or use arrow keys to rotate. Select a gold site to explore another ticket. Teal paths lead to the simulated service region.</p>
+              </div></div>
+            <section class="packet-player" id="packet-player" hidden aria-labelledby="packet-title">
+              <h3 id="packet-title" tabindex="-1">Ride the packet</h3><div id="packet-sites" class="packet-sites"></div>
+              <ol id="hop-list" aria-label="Packet journey"></ol><p id="packet-hop" aria-live="polite"></p><div class="packet-controls"><button id="play-ride" class="outline">Play journey</button><button id="hop-back" class="outline">Previous hop</button><button id="hop-next" class="primary">Next hop</button></div>
+            </section>
+        </details>
+          <details class="panel topology" aria-labelledby="topology-heading">
+            <summary class="topology-heading"><strong id="topology-heading">Inspect traffic path</strong><span id="path-phase">Before change</span></summary>
+            <div class="path-board">
+              <ul class="path-branches" id="path-branches" aria-label="Source branches"></ul>
+              <span class="path-wire junction" aria-hidden="true"></span>
+              <div class="path-node firewall">
+                <span class="node-mark" aria-hidden="true"></span>
+                <strong id="path-component">Firewall</strong>
+                <small id="path-method">IPv4 allowlist</small>
+              </div>
+              <span class="path-wire" aria-hidden="true"></span>
+              <div class="path-node">
+                <span class="node-mark portal-mark" aria-hidden="true"></span>
+                <strong id="path-destination"></strong>
+                <small id="path-port"></small>
+              </div>
+            </div>
+          </details>
+        <details id="help-detail" class="panel drawer"><summary>Hints &amp; worked solution</summary><div class="drawer-body">
+              <p class="help-cost" id="point-terms"></p>
+              <div class="help-actions">
+                <div>
+                  <button class="quiet" id="hint" type="button" aria-expanded="false" aria-controls="hint-text">Hint</button>
+                  <p class="help-note" id="hint-text" hidden></p>
+                </div>
+                <div>
+                  <button class="quiet" id="solution" type="button" aria-expanded="false" aria-controls="solution-text">Worked solution</button>
+                  <div class="help-note" id="solution-text" hidden></div>
+                </div>
+              </div>
+            </div>
+        </details>
+      </div>
+    </div>
+    <section class="panel summary" id="round-results" hidden aria-labelledby="round-result-heading">
+      <h1 class="panel-heading" id="round-result-heading" tabindex="-1"></h1>
+      <div class="summary-body"><p id="round-result-count"></p><div class="stat-grid" id="round-stats"></div>
+        <button class="primary" id="continue-round" type="button">Play the next 5 questions</button>
+        <button class="outline" id="results-score" type="button">Campaign scorecard</button>
+        <div id="round-arcade"></div>
+        <details class="round-review"><summary>Review these five answers</summary><ol id="round-history"></ol></details>
+      </div>
+    </section>
+    <section class="panel summary" id="summary" aria-labelledby="summary-heading" hidden>
+      <h1 class="panel-heading" id="summary-heading" tabindex="-1">Assessment scorecard</h1>
+      <div class="summary-body">
+        <p id="score-lede"></p>
+        <div class="stat-grid" id="summary-stats"></div>
+        <details class="rubric score-rubric"><summary>Risk ratings by actual band</summary><table><caption>Independent first forecasts</caption><thead><tr><th>Actual risk</th><th>Rated low</th><th>Rated moderate</th><th>Rated high</th></tr></thead><tbody id="calibration"></tbody></table></details>
+        <h2>Skills</h2><p class="field-note">Each drill has five tickets, including related changes for smaller topics. Seeing a solution marks that ticket as assisted for a future campaign forecast.</p><ul id="skills-list" class="skills-list"></ul>
+        <h2>Network oddities</h2><p id="arcade-total"></p><div id="stamp-list" class="stamp-list"></div>
+        <h2>First forecasts</h2>
+        <p class="field-note">Each ticket keeps its first forecast. Assisted tickets appear as practice. Accuracy uses independent first forecasts.</p>
+        <ol id="score-history"></ol>
+        <div class="score-actions">
+          <button class="primary" id="resume">Back to ticket</button>
+          <button class="outline" id="export">Export evidence</button>
+          <button class="outline" id="restart">Reset run</button>
+        </div>
+      </div>
+    </section>
+  </main>
+  <dialog id="library" aria-labelledby="library-title">
+    <form method="dialog" class="library-head"><h2 id="library-title">Ticket library</h2><button class="outline">Close</button></form>
+    <label for="type-filter">Ticket type</label>
+    <select id="type-filter"><option value="">All ticket types</option></select>
+    <label for="search">Find a ticket by ID, service, pattern or site</label>
+    <input type="search" id="search" autocomplete="off">
+    <div class="library-tools"><button class="primary" id="draw">Draw a matching unanswered ticket</button><span id="library-count" role="status"></span></div>
+    <ul id="library-list"></ul><button class="outline" id="tutorial">Play the unscored tutorial</button>
+  </dialog>
+  <dialog id="restart-dialog" aria-labelledby="restart-title">
+    <h2 id="restart-title">Restart this session?</h2>
+    <p>This clears your saved campaign points, forecasts and help history. Export your evidence first to keep a copy.</p>
+    <form method="dialog" class="dialog-actions">
+      <button class="outline" value="cancel" autofocus>Cancel</button>
+      <button class="primary" value="restart">Restart session</button>
+    </form>
+  </dialog>
+</body>
+</html>

@@ -1,145 +1,69 @@
-> **Planning template:** This README was copied and modified from the workshop
-> starter. Replace the remaining `[BRACKETED PLACEHOLDER]` fields as the game is
-> designed. No game or verification results exist yet.
+# Network Change Roulette (CR)
 
-# ArcadeLab-ChangeRoulette
-
-## Spec Kit setup
-
-This repository was initialized with **Spec Kit 1.4.3**, installed from PyPI, and
-the GitHub Copilot integration. To install Spec Kit, use the [official installation guide](https://github.github.io/spec-kit/installation.html);
-the workshop's installation command is:
-
-```sh
-uv tool install specify-cli --from git+https://github.com/github/spec-kit.git
-specify version
-```
-
-Use an instructor-provided release pin if applicable. Restart your agent in this
-project after setup. Personalize the three `StarterKit/` inputs before running
-the workshop's constitution, specify, clarify, plan, tasks, analyze, and
-implement steps. The generated `.specify/` files are starting templates, not a
-completed game specification.
-
-**[A SHORT, MEMORABLE LINE ABOUT THE PLAYER'S ACTION AND THE SKILL IT TEACHES].**
-
-[GAME NAME] is a browser game for [TARGET LEARNER]. You play as [ROLE], making [CORE DECISION] to [VISIBLE GOAL]. Each round explains the result so you can use what you learned on the next challenge.
-
-A project from **NAF AC6 — Loop Engineering, Spec-Driven Development & the Future of VibeOps**.
-
-| Project | Details |
-| --- | --- |
-| Status | Planning — update to prototype/playable/verified only when accurate |
-| Networking topic | [TOPIC AND TECHNICAL CONTEXT] |
-| Typical session | [EXPECTED PLAY TIME] |
-| Live demo | Not published yet |
-| Built by | [NAME(S) / GITHUB HANDLE(S)] |
-
-<!-- Optional after implementation: add ![Describe the game screen](docs/gameplay.png)
-     only after committing a real screenshot at that path. Replace the demo text
-     above with a working Markdown link after testing the deployed game. -->
-
-## The challenge
-
-[DESCRIBE ONE ROUND IN TWO OR THREE SENTENCES USING REAL NETWORK VALUES. SAY WHAT THE PLAYER SEES, WHAT THEY DECIDE, AND WHAT THE GAME SHOWS AFTER THE DECISION].
-
-For example, a routing game might ask you to inspect a destination and several routes, choose an exit, then explain the matching prefix. Replace this example with your game's actual experience.
-
-## What you'll learn
-
-| By the end, you can… | You'll practice by… |
-| --- | --- |
-| [OBSERVABLE SKILL 1] | [PLAYER ACTION 1] |
-| [OBSERVABLE SKILL 2] | [PLAYER ACTION 2] |
-| [OBSERVABLE SKILL 3] | [PLAYER ACTION 3] |
-
-**Before playing:** [PRIOR KNOWLEDGE, OR “NO PRIOR KNOWLEDGE; THE FIRST BRIEFING TEACHES THE BASICS”].
+Play 20 rounds of five network-change questions. Each forecast covers the affected branches and rollout risk. The 100 scored questions span ten service deployments with 60 firewall, 20 routing, 10 Zscaler PZEN and 10 endpoint PAC tickets. The original Tucson/Phoenix case is an optional unscored tutorial in the ticket library.
 
 ## Play locally
 
-These instructions apply after the game has been implemented and `index.html` exists. Download this repository or clone it using the URL from GitHub's **Code** button, then open a terminal in the project root.
-
-For the starter plan's static HTML/CSS/JavaScript build:
+From the project root, run:
 
 ```sh
 python3 -m http.server 8000 --bind 127.0.0.1
 ```
 
-On Windows with the Python launcher:
+Open **http://127.0.0.1:8000/** in your browser. In a cloud workspace, bind to `0.0.0.0` for a configured HTTP preview on port 8000. The game uses static HTML, CSS and JavaScript modules with no install or build step.
 
-```powershell
-py -m http.server 8000 --bind 127.0.0.1
+1. Read the current change and choose the affected branches and risk rating. Expand the network evidence, Terraform comparison, risk matrix or globe when you need more information.
+2. Press **Spin & commit** to submit. Expand **Answer explanation** for the simulated outcome. Each distinct first submission counts as one completed question. An independent forecast can earn 60 points for impact and 40 for risk. Hints and worked solutions mark a first forecast as assisted.
+3. After five first forecasts, review your round results. Choose **Play the next 5 questions** to continue with unanswered questions. Practice and retries earn no additional progress. The campaign ends at 100.
+4. Open **Scorecard** to review first-forecast accuracy, errors, streaks and downloadable JSON evidence. Progress saves in this browser when local storage is available. If storage is restricted, the game attempts tab storage and supports in-memory play.
+
+## Play the arcade round
+
+- Lock in the branches and risk before the rival bot reveals its call. You can cite the decisive site evidence. The fifth ticket also asks the change board to **Approve**, **Stage**, or **Hold** under the ticket’s rollout scope, active-user counts and recovery deadline. The board rubric is printed beside the choices.
+- Call your shot once per round. An exact independent impact prediction earns 25 arcade points. The campaign assessment still awards up to 60 for impact and 40 for risk. The scorecard keeps the ticket that earned each collectible stamp.
+- Pick either face-up ticket or choose **Pick for me**. After a verdict, **Ride the packet** opens the globe. Choose a branch and play the journey or advance one hop at a time. Reduced-motion settings keep the route marker stationary between steps.
+- The **Skills** section of the scorecard offers five-ticket drills and shows the most recent practice accuracy beside the campaign baseline. Each drill tracks its own five calls. Viewing a previously unanswered ticket’s solution or submitting it in practice marks its future campaign forecast as assisted.
+
+Active practice rounds resume in the same tab when session storage is available. The campaign and scorecard persist in browser storage. User counts, the rollout scope and the board's policy are workshop fixtures.
+
+## Model and evidence
+
+The NAF workshop loop connects a stated intent, a player decision, a visible network consequence and an explanation. This version compares the proposed policy with the intended branch access independently of how accurately the player predicted it. [NAF AC6 workshop](https://github.com/automateyournetwork/NAF_AC6/blob/main/WORKSHOP/LAB/README.md)
+
+Use **Ticket library → Ticket type** to choose a topic, or search for one of these examples. Every ticket includes expandable **Current configuration** and **Proposed configuration** panels. The goal is to assess the proposed change before it is applied.
+
+| Ticket | Change | What determines site access |
+| --- | --- | --- |
+| CR-002 | Remove a firewall permit | Whether a surviving allow rule covers the observed source of the new HTTPS connection. |
+| CR-062 | Add a more-specific route | The longest matching destination prefix in each branch table and reachability through its selected gateway. |
+| CR-072 | Withdraw a service prefix | The remaining route, including the default, and continuity through the standby path. |
+| CR-083 | Change the source seen at the on-premises PZEN | A matching source group and permitted hostname for the same ZIA URL-filtering rule. |
+| CR-093 | Add a domain bypass to the local PAC file | Which workstations receive the file, whether the hostname matches, and whether the site has private direct connectivity. |
+
+The Terraform examples use AWS security group ingress rules and routes, ZIA URL filtering rules, and a local file containing the managed workstation PAC script. For PZEN tickets the example assumes existing lab locations, source IP groups, single-host URL categories and a lower-priority block policy. PAC tickets also show the rendered JavaScript. The workstation rollout scope and private route evidence are supplied in the ticket. [AWS route](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/route) · [ZIA URL filtering rules](https://github.com/zscaler/terraform-provider-zia/blob/master/docs/resources/zia_url_filtering_rules.md) · [PAC file reference](https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/Proxy_servers_and_tunneling/Proxy_Auto-Configuration_PAC_file)
+
+Each branch makes a fresh HTTPS connection on TCP 443. The game grades post-change service access separately from intended access. The rehearsal and recovery matrix is an educational rubric for rollout risk. Service workflows, service regions and recovery estimates are fictional. When resuming a saved campaign, previously assessed tickets keep their original configuration and points.
+
+The orthographic globe uses a 3D unit sphere, approximate city-center coordinates, visible-hemisphere clipping and great-circle service paths. Its coastlines are derived from Natural Earth’s public-domain 1:110m dataset. [Natural Earth coastline](https://www.naturalearthdata.com/downloads/110m-physical-vectors/110m-coastline/)
+
+## Verification and offline play
+
+Run `node tests/run.mjs` or open **http://127.0.0.1:8000/tests/**. The 19 model checks cover the original workshop scenario, the 100 campaign questions, CIDR boundaries, routing, forward proxy policies, PAC decisions, scoring and assistance. The 20 simulated architect and change-lead browser checks play the full campaign with independently calculated answers. They verify five-question stopping points, unique draws, saved progress, scorecard export, globe selection, keyboard controls, phone layouts, reduced motion and offline play.
+
+With the server running, Python Playwright, Chromium and Node installed, run `python3 tests/persona_review.py` to reproduce the 20 browser passes. The script creates a temporary browser session and checks the standalone build offline. Run `python3 tests/arcade_review.py` against the same server for the packet ride, board decision, chip integrity, saved stamps and focused drill. Both scripts accept `--url`.
+
+To generate a standalone HTML game with Python’s standard library:
+
+```sh
+python3 tools/build_offline.py /tmp/Network-Change-Roulette-CR.html
 ```
 
-Open **http://127.0.0.1:8000** in your browser. Keep the terminal running; **Ctrl+C** stops the server. If port 8000 is busy, use 8001 in both the command and URL.
+Open the generated file in a browser. It contains the entire catalog and globe.
 
-The starter build loads JavaScript modules and JSON over HTTP. Use the server URL to preview it. If you chose a different stack, replace these instructions with the commands you actually tested. [Why modules need serving](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Modules).
+## Workshop files
 
-## How to play
+The [StarterKit](StarterKit/) inputs describe the learning goal and first build. The working [constitution](.specify/memory/constitution.md), [spec and clarifications](specs/001-change-roulette/spec.md), [plan and analysis](specs/001-change-roulette/plan.md), and [tasks](specs/001-change-roulette/tasks.md) record the original single-round milestone. The [assessment atlas](specs/002-assessment-atlas/review.md) records the earlier globe and assessment design passes. Spec Kit 1.4.3 is available in the prepared cloud environment. Run `/workspace/.arcadelab-tools/bin/specify version` to verify it there.
 
-1. Read the briefing and inspect [THE CHALLENGE DATA].
-2. [MAKE THE CORE CHOICE] and submit it.
-3. Read the explanation. A wrong answer lets you retry; a correct answer enables Next.
-4. Use a hint or worked solution when you need help. Assistance is recorded separately from completion.
-5. Finish [NUMBER OF LEVELS/ROUNDS] to reach the session summary.
+Backup-egress, route, forward proxy and local PAC changes are included. Multi-service API path tracing remains a workshop proposal.
 
-| Control | Action |
-| --- | --- |
-| [ACTUAL POINTER CONTROL] | [ACTION] |
-| [ACTUAL KEYBOARD CONTROL] | [ACTION] |
-| Hint / solution | [ACTUAL HELP BEHAVIOR] |
-| Restart | [ACTUAL RESET AND CONFIRMATION BEHAVIOR] |
-
-**Progress:** [WHAT IS COUNTED, WHEN A ROUND COMPLETES, AND WHAT HAPPENS ON RELOAD].
-
-## What this game models
-
-[STATE THE PRECISE TECHNICAL MODEL AND TWO OR THREE IMPORTANT ASSUMPTIONS].
-
-**Outside the model:** [ADJACENT BEHAVIOR THE GAME DOES NOT SIMULATE].
-
-| Reference | What it supports |
-| --- | --- |
-| [AUTHORITATIVE TITLE, URL, AND SECTION] | [SPECIFIC RULE OR CLAIM] |
-
-## How it was built
-
-The project follows the workshop's Spec Kit workflow: **constitution → specify → clarify → plan → tasks → analyze → implement**. The verification section below records which behaviors have actually been checked.
-
-- **Stack:** [ACTUAL LANGUAGES/LIBRARIES].
-- **Build tools:** GitHub Copilot; Spec Kit 1.4.3.
-- **Runtime:** [WHAT A PLAYER'S BROWSER NEEDS; DEFAULT IS STATIC FILES WITH NO MODEL OR API KEY].
-- **Planning inputs:** `StarterKit/CONSTITUTION.md`, `StarterKit/SPEC.md`, `StarterKit/PLAN.md`.
-- **Working artifacts:** [ACTUAL GENERATED CONSTITUTION, SPEC, PLAN, AND TASK PATHS].
-- **One useful design decision:** [A CONCRETE QUESTION OR ANALYSIS FINDING THAT CHANGED THE BUILD].
-
-## Verification
-
-**Last checked:** [DATE, BROWSER/OS, AND COMMIT OR BUILD IDENTIFIER].
-
-For the starter plan, run the local server and open **http://127.0.0.1:8000/tests/** after the agent has implemented the test runner. Replace this instruction if your project uses a different test command. Record test totals and failures; an empty test suite is not success.
-
-| Check | Result | Evidence / notes |
-| --- | --- | --- |
-| Correct, incorrect, and boundary cases | Not run | [CASE IDS AND RESULT OR FAILURE] |
-| Briefings and explanations checked against sources | Not run | [REVIEWER / REFERENCE NOTES] |
-| Retry, hint, duplicate Submit, completion, restart | Not run | [OBSERVED BEHAVIOR] |
-| Keyboard-only core playthrough | Not run | [BROWSER / OBSERVATIONS] |
-| Narrow layout and reduced motion | Not run | [VIEWPORT / OBSERVATIONS] |
-| Fresh checkout run instructions | Not run | [COMMAND / RESULT] |
-| Published demo, if used | Not run | [URL / RESULT, OR REMOVE ROW] |
-
-## Known limitations and next steps
-
-- **Known limitation:** [SPECIFIC UNIMPLEMENTED OR IMPERFECT BEHAVIOR].
-- **Next improvement:** [ONE SMALL CHANGE AND WHY IT HELPS LEARNING].
-
-Found an incorrect answer or unclear explanation? Open an issue with the level/round, input values, your choice, expected result, actual result, and a reference if available.
-
-## Credits
-
-Created by [AUTHORS]. Workshop by John Capobianco, Joksan Flores, and Elliot Conner. Adapted from the [NAF AC6 workshop materials](https://github.com/automateyournetwork/NAF_AC6) and [Networking Video Game Starter Kit](https://github.com/automateyournetwork/NetworkingVideoGameStarterKit), using [GitHub Spec Kit](https://github.com/github/spec-kit).
-
-**Assets and dependencies:** [CREDIT THE ACTUAL SOURCES, OR STATE THAT THE GAME USES ONLY ORIGINAL ASSETS].
-
-**License:** [Apache License 2.0](LICENSE).
+Adapted from the [AutoCon 6 lab](https://github.com/automateyournetwork/NAF_AC6/blob/main/WORKSHOP/LAB/README.md). [Apache License 2.0](LICENSE).
