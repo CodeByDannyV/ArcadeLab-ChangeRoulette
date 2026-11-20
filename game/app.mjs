@@ -1029,7 +1029,7 @@ function showScore() {
 }
 
 byId('export').onclick = () => {
-  const report = { questionsPerRound: roundSize, campaignSize: questions.length, completedRounds: Math.floor(ledger.size / roundSize), skillPractice: Object.fromEntries(drillHistory), assessment: 'Network Change Roulette (CR) · simulated access and rollout risk', scoring: 'First unassisted forecast per ticket: exact impact 60, correct risk 40.', summary: scorecard(ledger), evidence: [...ledger.values()].map(record => {
+  const report = { questionsPerRound: roundSize, campaignSize: questions.length, completedRounds: Math.floor(ledger.size / roundSize), skillPractice: Object.fromEntries(drillHistory), assessment: 'ArcadeLab-ChangeRoulette · simulated access and rollout risk', scoring: 'First unassisted forecast per ticket: exact impact 60, correct risk 40.', summary: scorecard(ledger), evidence: [...ledger.values()].map(record => {
     const ticket = questionById(record.id)
     const rows = evaluate(ticket)
     const probe = evidenceQuestion(ticket, rows)

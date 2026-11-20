@@ -1,4 +1,4 @@
-# Network Change Roulette (CR) Constitution
+# ArcadeLab-ChangeRoulette Constitution
 
 ## Core principles
 

@@ -1,4 +1,4 @@
-# Feature specification · Network Change Roulette (CR)
+# Feature specification · ArcadeLab-ChangeRoulette
 
 **Scope.** One playable workshop round about the effect of removing an IPv4 source allow rule. Audience is a networking learner playing the NOC change lead. Later NAT and service-to-service scenarios remain proposals.
 

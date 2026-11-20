@@ -1,4 +1,4 @@
-# Network Change Roulette (CR) · Specification input
+# ArcadeLab-ChangeRoulette · Specification input
 
 A new NOC change lead reads a firewall ticket, compares branch IPs to the rules, and predicts which branches will lose the ability to open a case in a fresh session. The replay explains the post-change verdict at each branch.
 

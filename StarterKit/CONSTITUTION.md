@@ -1,4 +1,4 @@
-# Network Change Roulette (CR) · Constitution input
+# ArcadeLab-ChangeRoulette · Constitution input
 
 **Purpose.** Help networking learners trace a change from the visible source IP to the firewall rule and explain which caseworkers lose service.
 
