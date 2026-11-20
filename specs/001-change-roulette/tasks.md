@@ -1,4 +1,4 @@
-# Tasks · ArcadeLab-ChangeRoulette
+# Tasks · Network Automation Arcade - Network Change Roulette (CR)
 
 - [x] T01 Implement and test the CIDR allowlist model and fixture validation (A1, A3).
 - [x] T02 Implement and test exact-set grading, retry and duplicate commit guards (A2, A4).
