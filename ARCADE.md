@@ -28,29 +28,43 @@ creator:                     # (HUMAN) fill in before submitting
   consent_to_publish: false
 
 build:
-  started: unknown
-  finished: unknown
+  started: "2026-11-19"      # The game-building session records the date.
+  finished: "2026-11-19"     # The tested solo build was delivered before the next day's GitHub push.
   wall_time: unknown
   spec_driven:
     framework: "GitHub Spec Kit"
     framework_version: "1.4.3"
     artifacts: [constitution, spec, clarify, plan, tasks, analysis]
     task_count: 7
-    loops_or_phases: unknown
-  model: unknown             # (HUMAN/agent that built it) exact model ID was not recorded in the repo
-  helper_models: []
-  harness: "GitHub Copilot"
-  harness_version: unknown
-  mcp_servers: []            # not recorded in the repo; list the MCP servers connected during the build
-  rag_and_sources: ["NAF AC6 workshop lab guide", "Natural Earth 1:110m coastline", "Terraform AWS provider docs", "Zscaler ZIA Terraform provider docs", "MDN PAC file reference"]
-  skills_and_plugins: [speckit-constitution, speckit-specify, speckit-clarify, speckit-plan, speckit-tasks, speckit-analyze, speckit-implement]
-  other_tools: [Node.js, Python, Playwright, Chromium]
+    loops_or_phases: 20        # Architect and change-lead build/review passes documented in the assessment atlas.
+  model: unknown
+  helper_models: ["ImageGen (UI mockups, exact model ID unknown)"]
+  harness: "Codex"
+  harness_version: "0.167.0-alpha.4"  # Workspace CLI version reported by codex --version.
+  mcp_servers: [codex_apps]    # Server identified in the session's cloud-environment tool calls.
+  rag_and_sources:
+    - "Creator's AutoCon 6 handoff and the workshop StarterKit"
+    - "Network Automation Forum AC6 workshop lab guide"
+    - "Automate Your Network and NetBox Labs (creator-supplied visual references)"
+    - "RFC 4632, section 3.1 (CIDR notation)"
+    - "NIST SP 800-41 Rev. 1, Guidelines on Firewalls and Firewall Policy"
+    - "Natural Earth 1:110m coastline data"
+    - "Terraform AWS provider documentation for routes"
+    - "Zscaler ZIA Terraform provider documentation for URL filtering rules, URL categories and firewall filtering rules"
+    - "MDN Proxy Auto-Configuration (PAC) file reference"
+  skills_and_plugins:
+    - "cloud-environment-onboarding:setup"
+    - "cloud-environment:cloud-environment-runtime"
+    - "cloud-environment:cloud-desktop"
+    - "game-studio:game-playtest"
+  other_tools: [Git, "GitHub Spec Kit CLI", Node.js, Python, Playwright, Chromium, Pillow, python-hcl2, ImageGen, curl, ripgrep]
   human_prompts: unknown
   usage:
     input_tokens: unknown
     output_tokens: unknown
     cost_note: unknown
-  ai_generated_assets: []
+  ai_generated_assets:
+    - "Three design mockups of the retired-subnet screen: amber change ticket, purple roulette wheel, and teal traffic path. These were visual references during development."
 
 runtime:
   kind: static-web
@@ -80,7 +94,11 @@ Network Change Roulette puts you in the change-review seat. Each ticket shows cu
 
 ## How it was built
 
-We followed the NAF AC6 workflow with GitHub Spec Kit: constitution, specification with clarifications, plan with analysis, then tasks and implementation. The first milestone was a single Tucson/Phoenix round, which became an unscored tutorial. The game then grew into a 100-question campaign, a globe with packet rides, and an assessment scorecard. Model checks and simulated persona browser runs verify the answers. Details such as exact model, token use and timings were not recorded in the repository, so they are marked unknown.
+We started with the workshop constitution and wrote the specification around a single firewall ticket. Tucson needed to lose access while Phoenix stayed connected. The clarifications defined a fresh HTTPS request and gave “Neither branch” its own choice so a blank answer could never earn credit. Next came the implementation plan with its policy analysis, then the task list. Hand-worked examples gave us expected answers before we wired the evaluator to the roulette wheel.
+
+The creator asked for an explorable globe and a way to assess rollout risk alongside branch impact. The assessment atlas records twenty architect and change-lead review passes. One pass caught a grading bug. Choosing a risk rating cleared “Neither branch.” We restricted the clearing behavior to branch checkboxes, then submitted a zero-impact forecast in Chromium to verify the fix.
+
+The creator later asked to put decisions before supporting evidence and divide the campaign into five-ticket rounds. Routing, forward-proxy and workstation PAC tickets added different ways for a connection to fail. The final solo build kept the change-board decision and skill drills after the creator asked to remove teammate play.
 
 ## What we'd tell the next builder
 
