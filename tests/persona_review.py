@@ -9,7 +9,7 @@ import json, math, subprocess
 from playwright.sync_api import sync_playwright, expect
 root = Path(__file__).resolve().parents[1]
 parser = argparse.ArgumentParser(description=__doc__)
-parser.add_argument('--url', default='http://127.0.0.1:8000/')
+parser.add_argument('--url', default='http://127.0.0.1:8000/classic.html')
 parser.add_argument('--chromium', default=shutil.which('chromium'))
 args = parser.parse_args()
 url = args.url

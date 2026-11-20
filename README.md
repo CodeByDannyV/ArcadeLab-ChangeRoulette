@@ -1,6 +1,19 @@
-# Network Automation Arcade - Network Change Roulette (CR)
+# Network Change Roulette — Change Bot Duel
 
 Play 20 rounds of five network-change questions. Each forecast covers the affected branches and rollout risk. The 100 scored questions span ten service deployments with 60 firewall, 20 routing, 10 Zscaler PZEN and 10 endpoint PAC tickets. The original Tucson/Phoenix case is an optional unscored tutorial in the ticket library.
+
+## Approved duel prototype
+
+The default landing page is now **Change Bot Duel**: 100 tickets, three calls per shift, and a rival bot to challenge. Investigate the proposed pilot change, then Approve, Hold, or Rollback. Each ticket offers one free check; each shift adds two reserve checks and one double-down chip. Network graphics respond to your probes, and the outcome replay shows whether each branch meets intent.
+
+NAF concepts appear where you use them: Intent in the brief, Collector in investigations, Executor in the pilot, Orchestration in rollout decisions, and Observability in the replay. Open **How to play** for instructions and purpose. Progress saves in this browser.
+
+- [Play the duel](index.html)
+- [Approved design specification](design-spec.html)
+- [Original modular campaign](classic.html)
+- [Earlier standalone campaign](campaign.html)
+
+The duel uses `mission.js` and `scenarios.js`. The original modular campaign remains under `game/`; its assessment, offline packager and existing browser checks are preserved. The sections below describe that original campaign. Run `python3 tests/duel_review.py` with the server running to exercise the new duel across all 100 tickets.
 
 ## Play locally
 

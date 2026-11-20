@@ -8,7 +8,7 @@ MODULES = ('round', 'network-cases', 'catalog', 'configuration', 'sites', 'coast
 
 
 def package(output):
-    html = (ROOT / 'index.html').read_text()
+    html = (ROOT / 'classic.html').read_text()
     css = (ROOT / 'game/style.css').read_text()
     scripts = []
     for module in MODULES:
