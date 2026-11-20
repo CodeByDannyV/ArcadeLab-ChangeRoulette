@@ -66,8 +66,8 @@ with TemporaryDirectory() as tmp, sync_playwright() as p:
         btn('Spin & commit').click()
 
     # 1: The decision fits on the first screen at desktop and phone widths.
-    expect(page).to_have_title('ArcadeLab-ChangeRoulette')
-    expect(at('.wordmark')).to_have_text('ArcadeLab-ChangeRoulette')
+    expect(page).to_have_title('Network Automation Arcade - Network Change Roulette (CR)')
+    expect(at('.wordmark')).to_have_text('Network Automation Arcade - Network Change Roulette (CR)')
     expect(at('#case-id')).to_have_text('Round 1 of 20 · Question 1 of 5')
     expect(at('#hud-progress')).to_have_text('0 / 100 completed')
     for width in (390,1440):
@@ -196,7 +196,7 @@ with TemporaryDirectory() as tmp, sync_playwright() as p:
     assert report['summary']['points']==40 and report['summary']['excess']==1 and report['summary']['missed']==1
     assert len(report['evidence'][0]['branchEvidence'])==2
     assert report['campaignSize']==100 and report['questionsPerRound']==5
-    assert report['assessment'].startswith('ArcadeLab-ChangeRoulette')
+    assert report['assessment'].startswith('Network Automation Arcade - Network Change Roulette (CR)')
     assert event.value.suggested_filename=='network-change-roulette-cr-scorecard.json'
     done('Change lead','Exported records linked first forecasts, blind spots, risk inputs and decisive rules.')
 
@@ -368,7 +368,7 @@ with TemporaryDirectory() as tmp, sync_playwright() as p:
     offline.on('pageerror',lambda e:errors.append(str(e)))
     offline.set_content(standalone.read_text())
     expect(offline.locator('#round-title')).to_have_text('Claims · Add a host route')
-    expect(offline).to_have_title('ArcadeLab-ChangeRoulette')
+    expect(offline).to_have_title('Network Automation Arcade - Network Change Roulette (CR)')
     offline.locator('#atlas-detail > summary').click()
     offline.locator('#site-select').select_option('Kigali')
     offline.locator('#site-tickets').click()

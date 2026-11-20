@@ -1,4 +1,4 @@
-# Implementation plan · ArcadeLab-ChangeRoulette
+# Implementation plan · Network Automation Arcade - Network Change Roulette (CR)
 
 The feature is a static site with no build step. The round module holds the authored evidence and intended post-change access for each branch. The policy module validates CIDRs and round data and evaluates IPv4 membership before and after rule removal. The session module guards commits and tracks help, attempts and progress. The browser controller renders the traffic board, semantic forms, replay and summary. Python serves the project on port 8000.
 
