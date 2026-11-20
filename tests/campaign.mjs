@@ -4,6 +4,7 @@ import { sites, serviceRegions } from '../game/sites.mjs'
 import { configPreview, pacFile } from '../game/configuration.mjs'
 import { evaluate } from '../game/policy.mjs'
 import { createSession } from '../game/session.mjs'
+import { rehearsalTrace } from '../game/naf.mjs'
 
 function assert(condition, message) {
   if (!condition) throw new Error(message)
@@ -19,6 +20,11 @@ export const campaignChecks = [
       const band = assessRisk(t.readiness).band
       const result = createSession(rows, band).commit(rows.filter(b => !b.after).map(b => b.id), band)
       assert(result.correct, t.id)
+      const proposal = rehearsalTrace(t, rows)
+      const rollback = rehearsalTrace(t, rows, 'rollback')
+      assert(proposal.matchingCount === rows.filter(b => b.meetsIntent).length, t.id + ' proposal intent')
+      assert(rollback.probes.every((probe, i) => probe.path === rows[i].before &&
+        probe.matchesIntent === (Boolean(rows[i].before) === rows[i].intendedAccess)), t.id + ' rollback baseline')
     }
   }],
   ['Backup egress and staged migration use the planned source', () => {

@@ -7,6 +7,7 @@ import { sites, serviceRegions } from './sites.mjs'
 import { assessRisk, rehearsals, riskBands, riskMatrix, recordFirst, scorecard } from './assessment.mjs'
 import { evaluate } from './policy.mjs'
 import { createSession } from './session.mjs'
+import { rehearsalTrace } from './naf.mjs'
 
 const byId = id => document.getElementById(id)
 
@@ -37,6 +38,42 @@ function explanation(outcome, round) {
   }
   const rule = round.rules.find(rule => rule.id === outcome.after)
   return `${outcome.name} retains access. Its post-change IP ${outcome.afterIp || outcome.ip} matches the kept ${rule.id} rule (${rule.source}).`
+}
+
+function mountRehearsal(ticket, rows, component) {
+  const target = ticket.network?.target || ticket.destination
+  byId('naf-target').textContent = `Simulated infrastructure · ${component} · ${ticket.destination} · TCP ${ticket.port}`
+  byId('naf-intent').textContent = rows.map(branch =>
+    `${branch.name} should ${branch.intendedAccess ? 'reach' : 'lose access to'} ${ticket.destination}.`).join(' ')
+  byId('naf-executor').textContent = `Applies the proposed ${component.toLowerCase()} configuration to a simulated network snapshot.`
+  const baseline = rows.map(branch => `${branch.name} ${branch.before ? 'reaches the service via ' + branch.before : 'cannot reach the service'}.`)
+  byId('naf-collector').textContent = `Probes ${target} from each branch. Before the change, ${baseline.join(' ')}`
+  byId('naf-config').onclick = () => byId('compare-config').click()
+
+  function renderRun(phase) {
+    const trace = rehearsalTrace(ticket, rows, phase)
+    const isProposal = phase === 'proposed'
+    byId('naf-proposed').setAttribute('aria-pressed', String(isProposal))
+    byId('naf-rollback').setAttribute('aria-pressed', String(!isProposal))
+    byId('naf-event').textContent = `${isProposal ? 'Proposed change' : 'Rollback'} · ${trace.event} · ${trace.matchingCount} of ${trace.probes.length} branches match`
+    byId('naf-probes').replaceChildren(...trace.probes.map(probe => row(probe.site,
+      probe.expectedAccess ? 'Permit' : 'Revoke',
+      probe.observedAccess ? 'Reachable' : 'Unreachable',
+      element('strong', probe.matchesIntent ? 'Match' : 'Mismatch', probe.matchesIntent ? 'naf-pass' : 'naf-miss'))))
+    byId('naf-next').textContent = trace.nextAction
+  }
+
+  byId('naf-proposed').onclick = () => renderRun('proposed')
+  byId('naf-rollback').onclick = () => renderRun('rollback')
+  byId('open-naf').onclick = () => {
+    byId('naf-detail').open = true
+    byId('naf-trace-heading').focus()
+  }
+  return () => {
+    byId('naf-lock').hidden = true
+    byId('naf-trace').hidden = false
+    renderRun('proposed')
+  }
 }
 
 const challengeTemplate = byId('challenge').cloneNode(true)
@@ -414,6 +451,7 @@ function mount(round, focus = false) {
 
   byId('round-title').textContent = round.title
   const facts = policyEvidence(round)
+  const revealRehearsal = mountRehearsal(round, outcomes, facts.component)
   byId('question-type').textContent = ticketTypes[kindOf(round)]
   byId('question-stem').textContent = round.ticket
   byId('policy-heading').textContent = facts.component + ' & rollout evidence'
@@ -656,6 +694,7 @@ function mount(round, focus = false) {
     intentVerdict.hidden = false
     status.setAttribute('aria-describedby', 'intent-verdict')
     showPath(true)
+    revealRehearsal()
     replayBody.hidden = false
     replayRows.replaceChildren(...reveal.map(replayEntry))
     replayRows.hidden = false
@@ -1001,6 +1040,7 @@ function showScore() {
     const names = ids => ids.length ? ids.join(', ') : 'neither'
     item.append(element('strong', `${r.id} · ${r.title} · ${r.points} pts`),
       element('p', `Impact: you chose ${names(r.predicted)}. Actual loss: ${names(r.actual)}. Risk: you chose ${r.predictedRisk}. Matrix: ${r.actualRisk}.`),
+      element('p', r.intentMet ? 'Rehearsal matched the intended access at every branch.' : 'Rehearsal detected a branch access discrepancy.'),
       element('small', r.assisted ? `Assisted · ${r.help.join(', ')}` : 'Independent first forecast'))
     if (r.arcade?.evidence || r.arcade?.board) {
       const ticket = questionById(r.id), rows = evaluate(ticket)
@@ -1035,6 +1075,7 @@ byId('export').onclick = () => {
     const probe = evidenceQuestion(ticket, rows)
     return { ...record, type: ticketTypes[kindOf(ticket)], skill: forecastSkill(ticket), readiness: ticket.readiness,
       rules: ticket.rules, network: ticket.network, branchEvidence: rows, businessImpact: decisionBrief(ticket, rows),
+      frameworkRehearsal: rehearsalTrace(ticket, rows),
       citedEvidence: probe.options.find(option => option.id === record.arcade?.evidence)?.label, decisiveEvidence: probe.decisive }
   }) }
   const url = URL.createObjectURL(new Blob([JSON.stringify(report, null, 2)], { type: 'application/json' }))

@@ -28,7 +28,18 @@ Active practice rounds resume in the same tab when session storage is available.
 
 ## Model and evidence
 
-The NAF workshop loop connects a stated intent, a player decision, a visible network consequence and an explanation. This version compares the proposed policy with the intended branch access independently of how accurately the player predicted it. [NAF AC6 workshop](https://github.com/automateyournetwork/NAF_AC6/blob/main/WORKSHOP/LAB/README.md)
+The original AC6 workshop asks players to forecast the consequences of a change. The **NAF change rehearsal** also teaches the six roles in the Network Automation Framework. Open it under any ticket to see the expected branch access, the current HTTPS baseline and the proposed configuration. Reading it is part of an independent forecast. [NAF architecture](https://reference.networkautomation.forum/Framework/Framework/#architecture) · [NAF AC6 workshop](https://github.com/automateyournetwork/NAF_AC6/blob/main/WORKSHOP/LAB/README.md)
+
+| Framework role | What happens in the rehearsal |
+| --- | --- |
+| Presentation | The change desk accepts your forecast and displays the results. |
+| Intent | The ticket records whether each branch should have HTTPS access to the service. |
+| Orchestration | Committing your forecast triggers the simulated change and probes. You can request a rollback rehearsal after the verdict. |
+| Executor | The simulator selects the proposed firewall, routing, proxy or PAC configuration, or restores the original snapshot for rollback. |
+| Collector | Simulated HTTPS probes report reachability from each branch in the selected state. |
+| Observability | The game compares each observation with intent, flags discrepancies and includes the proposed-run findings in the campaign scorecard export. |
+
+Try **Ticket library → Play the unscored tutorial**. Tucson should lose access and Phoenix should keep it. After submitting, choose **Compare change & rollback**. The proposed firewall policy fulfills both requirements. Select **Simulate rollback** and Tucson can connect again, reopening the access the ticket was meant to retire. Both rehearsals run locally against the same ticket. The original forecast remains the scored attempt.
 
 Use **Ticket library → Ticket type** to choose a topic, or search for one of these examples. Every ticket includes expandable **Current configuration** and **Proposed configuration** panels. The goal is to assess the proposed change before it is applied.
 
@@ -50,7 +61,7 @@ The orthographic globe uses a 3D unit sphere, approximate city-center coordinate
 
 Run `node tests/run.mjs` or open **http://127.0.0.1:8000/tests/**. The 19 model checks cover the original workshop scenario, the 100 campaign questions, CIDR boundaries, routing, forward proxy policies, PAC decisions, scoring and assistance. The 20 simulated architect and change-lead browser checks play the full campaign with independently calculated answers. They verify five-question stopping points, unique draws, saved progress, scorecard export, globe selection, keyboard controls, phone layouts, reduced motion and offline play.
 
-With the server running, Python Playwright, Chromium and Node installed, run `python3 tests/persona_review.py` to reproduce the 20 browser passes. The script creates a temporary browser session and checks the standalone build offline. Run `python3 tests/arcade_review.py` against the same server for the packet ride, board decision, chip integrity, saved stamps and focused drill. Both scripts accept `--url`.
+With the server running and Python Playwright, Chromium and Node installed, run `python3 tests/persona_review.py` to reproduce the 20 browser passes. The script creates a temporary browser session and checks the standalone build offline. Run `python3 tests/arcade_review.py` for the packet ride, board decision, chip integrity, saved stamps and focused drill. Run `python3 tests/naf_review.py` for the framework roles, pre-forecast evidence, rollback and exported observations. All three scripts accept `--url`.
 
 To generate a standalone HTML game with Python’s standard library:
 

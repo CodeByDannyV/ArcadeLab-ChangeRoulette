@@ -514,6 +514,32 @@ dialog::backdrop { background: #00101bcf; }
 .drawer-body { padding: 0 16px 16px; }
 .drawer-body h2 { font-size: 1.05rem; }
 .drawer-body .help-cost { margin-top: 2px; }
+#naf-target { margin-bottom: .7rem; font-size: .9rem; color: var(--muted); }
+#naf-detail h3 { font-size: 1.04rem; }
+#naf-lock { margin-bottom: 1rem; }
+.naf-roles { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr)); gap: .65rem; margin: .65rem 0; }
+.naf-roles div { padding: .65rem .8rem; background: var(--base); border: 1px solid var(--line); border-radius: 8px; }
+.naf-roles dt { display: flex; align-items: center; gap: .5rem; font-weight: 700; }
+.naf-roles dt::before { content: ""; width: .65rem; height: .65rem; border-radius: 50%; background: var(--role-color); }
+.naf-roles div:nth-child(1) { --role-color: #f5c518; }
+.naf-roles div:nth-child(2) { --role-color: #ff6d2e; }
+.naf-roles div:nth-child(3) { --role-color: #00d4ff; }
+.naf-roles div:nth-child(4) { --role-color: #6366f1; }
+.naf-roles div:nth-child(5) { --role-color: #f43f5e; }
+.naf-roles div:nth-child(6) { --role-color: #00e676; }
+.naf-roles dd { margin: .3rem 0 0; color: var(--muted); font-size: .9rem; line-height: 1.45; }
+.naf-roles .text-action { padding: 3px 0; }
+.naf-source { color: var(--accent-light); font-size: .88rem; }
+#naf-trace { margin: .8rem 0 1.2rem; padding: .85rem; border: 1px solid var(--line); border-radius: 8px; }
+.naf-controls { display: flex; flex-wrap: wrap; gap: .5rem; margin: .6rem 0; }
+.naf-controls [aria-pressed="true"] { color: var(--base); background: var(--mint); }
+#naf-event { margin: .75rem 0 .4rem; font-weight: 690; }
+.naf-probes caption { text-align: start; color: var(--muted); font-size: .85rem; }
+.naf-probes :is(th, td) { padding: .4rem clamp(.2rem, 1vw, .8rem); overflow-wrap: anywhere; }
+.naf-pass { color: var(--mint); }
+.naf-miss { color: var(--rose); }
+#naf-next { margin-top: .6rem; }
+#open-naf { margin-inline-start: .7rem; }
 #intent-targets { color: var(--accent-light); margin-block: 5px; }
 #round-results .summary-body > button { margin: 8px 5px 8px 0; }
 .round-review { margin-top: 12px; }

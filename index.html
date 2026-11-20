@@ -60,6 +60,7 @@
           <div class="bot-result" id="bot-result"></div>
           <p class="field-note" id="arcade-feedback"></p>
           <button type="button" class="text-action" id="ride-packet">Ride the packet</button>
+          <button type="button" class="text-action" id="open-naf">Compare change &amp; rollback</button>
           <div id="next-deal" hidden><h3>Choose your next ticket</h3><div class="deal-cards" id="deal-cards"></div></div>
           <button class="primary" id="advance" type="button">Next question</button>
           <button class="outline" id="retry" type="button" hidden>Try again</button>
@@ -69,6 +70,37 @@
         <details id="replay-detail" class="panel drawer" hidden><summary>Answer explanation</summary>
           <div class="drawer-body"><p class="intent-verdict" id="intent-verdict"></p><p id="risk-review"></p>
             <ol class="replay-rows" id="replay-rows"></ol></div>
+        </details>
+        <details class="panel drawer" id="naf-detail">
+          <summary>NAF change rehearsal <span class="drawer-caption">Intent, probes &amp; rollback</span></summary>
+          <div class="drawer-body">
+            <p id="naf-target"></p>
+            <section id="naf-trace" hidden aria-labelledby="naf-trace-heading">
+              <h3 id="naf-trace-heading" tabindex="-1">Compare rehearsal results</h3>
+              <div class="naf-controls" role="group" aria-label="Simulated network state">
+                <button type="button" class="outline" id="naf-proposed" aria-pressed="true">Proposed change</button>
+                <button type="button" class="outline" id="naf-rollback" aria-pressed="false">Simulate rollback</button>
+              </div>
+              <p class="field-note">Rollback restores the pre-change snapshot. Both runs use the ticket’s original access requirements.</p>
+              <p id="naf-event" role="status"></p>
+              <table class="naf-probes"><caption>Simulated HTTPS probes by branch</caption>
+                <thead><tr><th scope="col">Branch</th><th scope="col">Intent</th><th scope="col">Observed</th><th scope="col">Check</th></tr></thead>
+                <tbody id="naf-probes"></tbody>
+              </table>
+              <p id="naf-next"></p>
+            </section>
+            <p class="field-note" id="naf-lock">Commit your forecast to compare the proposed change with a rollback.</p>
+            <h3>Who does what on this ticket?</h3>
+            <dl class="naf-roles">
+              <div><dt>Presentation</dt><dd>Use the change desk to inspect the ticket, submit your forecast and review the result.</dd></div>
+              <div><dt>Intent</dt><dd id="naf-intent"></dd></div>
+              <div><dt>Orchestration</dt><dd>Submitting a forecast triggers a dry run and requests fresh probes. You can then rehearse a rollback and probe again.</dd></div>
+              <div><dt>Executor</dt><dd><span id="naf-executor"></span> <button type="button" class="text-action" id="naf-config">Inspect the configuration diff</button></dd></div>
+              <div><dt>Collector</dt><dd id="naf-collector"></dd></div>
+              <div><dt>Observability</dt><dd>Compares each probe with the branch’s required access and flags any discrepancy. The campaign scorecard keeps the proposed-run evidence.</dd></div>
+            </dl>
+            <a class="naf-source" href="https://reference.networkautomation.forum/Framework/Framework/#architecture" target="_blank" rel="noopener noreferrer">NAF reference architecture ↗</a>
+          </div>
         </details>
         <details class="panel drawer" id="ticket-evidence"><summary id="policy-heading">Change &amp; rollout evidence</summary>
           <div class="drawer-body"><h2 class="panel-heading" id="ticket-heading">Change ticket</h2>

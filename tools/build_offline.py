@@ -4,7 +4,7 @@ import argparse
 import re
 
 ROOT = Path(__file__).resolve().parents[1]
-MODULES = ('round', 'network-cases', 'catalog', 'configuration', 'sites', 'coast', 'globe', 'policy', 'assessment', 'session', 'arcade', 'app')
+MODULES = ('round', 'network-cases', 'catalog', 'configuration', 'sites', 'coast', 'globe', 'policy', 'assessment', 'session', 'arcade', 'naf', 'app')
 
 
 def package(output):
