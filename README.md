@@ -1,4 +1,4 @@
-# Network Change Roulette (CR)
+# ArcadeLab-ChangeRoulette
 
 Play 20 rounds of five network-change questions. Each forecast covers the affected branches and rollout risk. The 100 scored questions span ten service deployments with 60 firewall, 20 routing, 10 Zscaler PZEN and 10 endpoint PAC tickets. The original Tucson/Phoenix case is an optional unscored tutorial in the ticket library.
 
