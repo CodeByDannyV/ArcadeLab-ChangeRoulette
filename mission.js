@@ -39,13 +39,37 @@ function save(){
 function restore(){
   try{
     const saved=JSON.parse(localStorage.getItem(key))
-    if(!saved || !Number.isInteger(saved.current) || !tickets[saved.current])return
-    if(!Number.isInteger(saved.extras)||saved.extras<0||saved.extras>2||!Array.isArray(saved.seen))return
+    if(!saved)return
+    if(!validSavedCampaign(saved)){
+      byId('save-status').textContent='Saved progress could not be restored. Starting a new campaign.'
+      return
+    }
     current=saved.current;extras=saved.extras;chip=Boolean(saved.chip)
     shiftCount=saved.shiftCount||0;playerTotal=saved.playerTotal||0;botTotal=saved.botTotal||0
     records=saved.records||{};seen=new Set(saved.seen.filter(x=>['a','b','diff','restore'].includes(x)))
     locked=Boolean(saved.locked)&&actions.includes(saved.choice);choice=saved.choice;stake=Boolean(saved.stake)
   }catch{}
+}
+function validSavedCampaign(saved){
+  const integer=(n,min,max)=>Number.isInteger(n)&&n>=min&&n<=max
+  const object=value=>value!==null&&typeof value==='object'&&!Array.isArray(value)
+  const validScore=result=>object(result)&&['before','after'].includes(result.phase)
+    &&[result.service,result.access,result.support].every(n=>integer(n,0,1))
+    &&typeof result.correct==='boolean'&&[-3,0,3].includes(result.bonus)
+    &&result.points===result.service+result.access+(result.correct?2:0)+result.support+result.bonus
+  if(!object(saved)||!integer(saved.current,0,tickets.length-1)||!integer(saved.extras,0,2)
+    ||!integer(saved.shiftCount,0,3)||typeof saved.chip!=='boolean'||typeof saved.locked!=='boolean'
+    ||typeof saved.stake!=='boolean'||!Array.isArray(saved.seen)||saved.seen.length>4
+    ||saved.seen.some(check=>!['a','b','diff','restore'].includes(check))
+    ||new Set(saved.seen).size!==saved.seen.length||!object(saved.records))return false
+  const entries=Object.entries(saved.records),ids=new Set(tickets.map(t=>t.id))
+  if(entries.some(([id,r])=>!ids.has(id)||!object(r)||!actions.includes(r.action)
+    ||!actions.includes(r.bot)||!validScore(r.you)||!validScore(r.rival)))return false
+  const currentRecord=saved.records[tickets[saved.current].id]
+  if(saved.locked?(!currentRecord||saved.choice!==currentRecord.action):(currentRecord||saved.choice!==null))return false
+  return saved.playerTotal===entries.reduce((sum,[,r])=>sum+r.you.points,0)
+    &&saved.botTotal===entries.reduce((sum,[,r])=>sum+r.rival.points,0)
+    &&saved.shiftCount<=entries.length
 }
 function icon(name) {
   const ns = 'http://www.w3.org/2000/svg'
